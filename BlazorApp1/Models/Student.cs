@@ -30,4 +30,9 @@ public class Student
         return $"{FirstName} {LastName}";
     }
 
+    public int GetID()
+    {
+        return Id;
+    }
+
 }

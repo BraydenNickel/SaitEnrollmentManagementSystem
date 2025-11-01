@@ -16,56 +16,62 @@
             <th>First Name</th>
             <th>Last Name</th>
             <th>ID</th>
-            <th>Semenster</th>
+            <th>Semester</th>
             <th>Date of birth</th>
             <th>Gender</th>
             <th>GPA</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (Student student in studentLists)
-            {
-                <tr>
-                    <td>@student.FirstName</td>
-                    <td>@student.LastName</td>
-                    <td>@student.GetID()</td>
-                    <td>@student.CurrentSemester</td>
-                    <td>@student.DateOfBirth</td>
-                    <td>@student.Gender</td>
-                    <td>@student.GPA</td>
-                    <td><button @onclick="() => SelectStudent(student)">Select</button></td>
-                </tr>
-            }
+        {
+            <tr>
+                <td>@student.FirstName</td>
+                <td>@student.LastName</td>
+                <td>@student.GetID()</td>
+                <td>@student.CurrentSemester</td>
+                <td>@student.DateOfBirth</td>
+                <td>@student.Gender</td>
+                <td>@student.GPA</td>
+                <td>
+                    <button class="btn btn-sm btn-secondary" 
+                            @onclick="() => SelectStudent(student)">
+                        Select
+                    </button>
+                </td>
+            </tr>
+        }
     </tbody>
-    @if(TheSelectedStudent != null){
-        <p>@TheSelectedStudent.FirstName</p>
-        <p>@TheSelectedStudent.LastName</p>
-        <p>@TheSelectedStudent.GetID()</p>
-        <p>@TheSelectedStudent.CurrentSemester</p>
-        <p>@TheSelectedStudent.DateOfBirth</p>
-        <p>@TheSelectedStudent.Gender</p>
-        <p>@TheSelectedStudent.GPA</p>
-    }
 </table>
+
+@if (TheSelectedStudent != null)
+{
+    <h3>Selected Student</h3>
+    <p><strong>First Name:</strong> @TheSelectedStudent.FirstName</p>
+    <p><strong>Last Name:</strong> @TheSelectedStudent.LastName</p>
+    <p><strong>ID:</strong> @TheSelectedStudent.GetID()</p>
+    <p><strong>Semester:</strong> @TheSelectedStudent.CurrentSemester</p>
+    <p><strong>Date of Birth:</strong> @TheSelectedStudent.DateOfBirth</p>
+    <p><strong>Gender:</strong> @TheSelectedStudent.Gender</p>
+    <p><strong>GPA:</strong> @TheSelectedStudent.GPA</p>
+}
 
 @code {
     private int currentCount = 0;
     public StudentService studentService = new StudentService();
-    public List<Student> studentLists = new List<Student>();
-    public Student TheSelectedStudent = null;
+    public List<Student> studentLists = new();
+    public Student? TheSelectedStudent = null;
 
-    private void IncrementCount()
-    {
-        currentCount++;
-    }
+    private void IncrementCount() => currentCount++;
+
     protected override async Task OnInitializedAsync()
     {
         studentLists = studentService.GetAllStudents();
     }
-    private void Reload(){
-        studentLists = studentService.GetAllStudents();
-    }
-    private void SelectStudent(Student student){
 
+    private void SelectStudent(Student student)
+    {
+        TheSelectedStudent = student;
     }
 }

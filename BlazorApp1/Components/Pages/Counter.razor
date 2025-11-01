@@ -10,12 +10,46 @@
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
+<table class="table">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>ID</th>
+            <th>Semenster</th>
+            <th>Date of birth</th>
+            <th>Gender</th>
+            <th>GPA</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Student student in studentLists)
+            {
+                <tr>
+                    <td>@student.FirstName</td>
+                    <td>@student.LastName</td>
+                    <td>@student.GetID()</td>
+                    <td>@student.CurrentSemester</td>
+                    <td>@student.DateOfBirth</td>
+                    <td>@student.Gender</td>
+                    <td>@student.GPA</td>
+                </tr>
+            }
+    </tbody>
+</table>
+
 @code {
     private int currentCount = 0;
     public StudentService studentService = new StudentService();
+    public List<Student> studentLists = new List<Student>();
 
     private void IncrementCount()
     {
         currentCount++;
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        studentLists = studentService.GetAllStudents();
+
     }
 }

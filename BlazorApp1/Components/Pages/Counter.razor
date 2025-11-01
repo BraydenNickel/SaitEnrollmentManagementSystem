@@ -33,15 +33,26 @@
                     <td>@student.DateOfBirth</td>
                     <td>@student.Gender</td>
                     <td>@student.GPA</td>
+                    <td><button @onclick="() => SelectStudent(student)">Select</button></td>
                 </tr>
             }
     </tbody>
+    @if(TheSelectedStudent != null){
+        <p>@TheSelectedStudent.FirstName</p>
+        <p>@TheSelectedStudent.LastName</p>
+        <p>@TheSelectedStudent.GetID()</p>
+        <p>@TheSelectedStudent.CurrentSemester</p>
+        <p>@TheSelectedStudent.DateOfBirth</p>
+        <p>@TheSelectedStudent.Gender</p>
+        <p>@TheSelectedStudent.GPA</p>
+    }
 </table>
 
 @code {
     private int currentCount = 0;
     public StudentService studentService = new StudentService();
     public List<Student> studentLists = new List<Student>();
+    public Student TheSelectedStudent = null;
 
     private void IncrementCount()
     {
@@ -53,5 +64,8 @@
     }
     private void Reload(){
         studentLists = studentService.GetAllStudents();
+    }
+    private void SelectStudent(Student student){
+
     }
 }

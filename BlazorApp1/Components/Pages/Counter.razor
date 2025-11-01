@@ -1,4 +1,5 @@
 ﻿@page "/counter"
+@using BlazorApp1.Models
 @rendermode InteractiveServer
 
 <PageTitle>Counter</PageTitle>
@@ -11,6 +12,7 @@
 
 @code {
     private int currentCount = 0;
+    public StudentService studentService = new StudentService();
 
     private void IncrementCount()
     {

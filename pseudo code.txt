@@ -1,0 +1,72 @@
+students = [Student ...]
+
+class Student(){
+    string firstName
+    string lastName
+    date dateOfBirth
+    string gender
+    decimal gpa
+    string currentSemester
+    string program
+    integer numberOfCourses
+
+    constructor (firstName, lastName, dob, gender, gpa, semester, program, courses){
+        set this.firstName = firstName
+        set this.lastName = lastName
+        set this.dateOfBirth = dob
+        set this.gender = gender
+        set this.gpa gpa
+        set this.currentSemester = semester
+        set this.program = program
+        set this.numberOfCourses = courses
+    }
+
+    function string getStudentName(){
+        return this.firstName + " " + this.lastName
+    }
+}
+
+function generateID(){
+    while(true)
+        tryID = Number
+        for(student in students){
+            if(tryID == student.ID)
+                tryID += 1
+                continue# to reset the for loop, until an id is added that is not already in use
+        }
+        return tryID
+}
+
+while(user.is_loginned):
+    option = user.input_or_selection
+    
+    if(option is "enroll")
+        while
+            get new students information
+            confirmed information
+            if wrong
+                loop
+            else
+                break
+        newID = generateID 
+        add student and assign an ID
+
+    if(option is "modify")
+        change_id = input_or_selection
+        for(student in students):
+            if(student.id == deletion_id):
+                student.get_data()
+                
+                confirm changes
+                return
+
+
+    if(option is "delete")
+        deletion_id = input_or_selection
+        if(input("Delete student")):
+            for(student in students):
+                if(student.id == deletion_id):
+                    students.remove(student)
+
+    if(option is "logout")
+        break

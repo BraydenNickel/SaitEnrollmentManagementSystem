@@ -18,7 +18,7 @@ class students:
         self.ProgramEnrolled = ProgramEnrolled
 
     def get_name(self):
-        return self.FirstName + self.LastName
+        return self.FirstName + " " + self.LastName
 
 class StudentService:
     def __init__(self):
@@ -36,7 +36,7 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Student Enrollment System")
-        self.geometry("1500x1600")
+        self.geometry("1200x600")
 
         # Container for all pages
         container = tk.Frame(self)
@@ -76,29 +76,51 @@ class MainPage(tk.Frame):
         self.listbox = tk.Listbox(self, selectmode=tk.SINGLE)
         self.listbox.pack(padx=10, pady=10)
 
-        # Show only usernames in the listbox
-        for student in self.students:
-            self.listbox.insert(tk.END, student.get_name())
-
         self.listbox.bind("<<ListboxSelect>>", self.on_select)
 
-        self.toggle()
+        self.Id = tk.Entry(self, width=40)
+        self.Id.pack()
+        self.FirstName = tk.Entry(self, width=40)
+        self.FirstName.pack()
+        self.LastName = tk.Entry(self, width=40)
+        self.LastName.pack()
+        self.DateOfBirth = tk.Entry(self, width=40)
+        self.DateOfBirth.pack()
+        self.Gender = tk.Entry(self, width=40)
+        self.Gender.pack()
+        self.GPA = tk.Entry(self, width=40)
+        self.GPA.pack()
+        self.CurrentSemester = tk.Entry(self, width=40)
+        self.CurrentSemester.pack()
+        self.NumberOfCourses = tk.Entry(self, width=40)
+        self.NumberOfCourses.pack()
+        self.ProgramEnrolled = tk.Entry(self, width=40)
+        self.ProgramEnrolled.pack()
+
+        self.refresh()
 
     def on_select(self, event):
+        def replace_text(text, new_text):
+            text.delete(0, tk.END)
+            text.insert(0, new_text)
         selected_index = self.listbox.curselection()
         if not selected_index:
             self.toggle()
             return
         
         index = selected_index[0]
-        selected_row = self.students[index]
-        print("Selected row:", selected_row)
-
-        # Store values
-        self.selectedStudent = list(selected_row[:3])  # first 3 columns
+        self.selectedStudent = self.students[index]
         print("Selected student:", self.selectedStudent)
 
-        self.toggle()
+        replace_text(self.Id, self.selectedStudent.Id)
+        replace_text(self.FirstName, self.selectedStudent.FirstName)
+        replace_text(self.LastName, self.selectedStudent.LastName)
+        replace_text(self.DateOfBirth, self.selectedStudent.DateOfBirth)
+        replace_text(self.Gender, self.selectedStudent.Gender)
+        replace_text(self.GPA, self.selectedStudent.GPA)
+        replace_text(self.CurrentSemester, self.selectedStudent.CurrentSemester)
+        replace_text(self.NumberOfCourses, self.selectedStudent.NumberOfCourses)
+        replace_text(self.ProgramEnrolled, self.selectedStudent.ProgramEnrolled)
 
     def toggle(self):
         global you
@@ -111,7 +133,7 @@ class MainPage(tk.Frame):
 
         self.students = self.studentService.GetAllStudents()  # Store the full data
         for student in self.students:
-            self.listbox.insert(tk.END, student.get_name())
+            self.listbox.insert(tk.END, f"{student.Id} " + student.get_name())
 
         self.listbox.bind("<<ListboxSelect>>", self.on_select)
 

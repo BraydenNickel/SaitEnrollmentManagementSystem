@@ -1,0 +1,96 @@
+@page "/StudentEdit/{Id:int}"
+@rendermode InteractiveServer
+@using BlazorApp1.Models
+@inject StudentService StudentService
+@inject NavigationManager NavigationManager
+
+<h3>Edit Student</h3>
+
+@if (student == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <EditForm Model="@student" OnSubmit="@SaveStudent">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label>First Name:</label>
+            <InputText @bind-Value="student.FirstName" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Last Name:</label>
+            <InputText @bind-Value="student.LastName" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Date of Birth:</label>
+            <InputDate @bind-Value="student.DateOfBirth" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Gender:</label>
+            <InputText @bind-Value="student.Gender" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>GPA:</label>
+            <InputNumber @bind-Value="student.GPA" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Current Semester:</label>
+            <InputNumber @bind-Value="student.CurrentSemester" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Number of Courses:</label>
+            <InputNumber @bind-Value="student.NumberOfCourses" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Program:</label>
+            <InputText @bind-Value="student.ProgramEnrolled" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-success mt-3">Save</button>
+        <button type="button" class="btn btn-secondary mt-3 ms-2" @onclick="Cancel">Cancel</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Student? student;
+
+    protected override void OnInitialized()
+    {
+        student = StudentService.GetStudentById(Id);
+    }
+
+    private void SaveStudent()
+    {
+        StudentService.ModifyStudent(
+            student.Id,
+            student.FirstName,
+            student.LastName,
+            student.DateOfBirth,
+            student.Gender,
+            student.GPA,
+            student.CurrentSemester,
+            student.NumberOfCourses,
+            student.ProgramEnrolled
+        );
+
+        NavigationManager.NavigateTo("/StudentList");
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/StudentList");
+    }
+}

@@ -9,6 +9,24 @@
 
 <h1>Students</h1>
 
+<div class="d-flex gap-2 mb-3">
+    <InputText @bind-Value="searchQuery" class="form-control w-50" 
+               placeholder="Search for a student by name..." />
+    <button class="btn btn-primary" @onclick="SearchStudents">Search</button>
+    <button class="btn btn-outline-secondary" @onclick="LoadAllStudents">Reset</button>
+</div>
+
+<div class="d-flex gap-2 mb-4">
+    <InputNumber @bind-Value="minGpaFilter" class="form-control w-25" placeholder="Min GPA" />
+    <button class="btn btn-info" @onclick="FilterByGpa">Apply GPA Filter</button>
+</div>
+
+<div class="btn-group mb-3">
+    <button class="btn btn-light" @onclick='() => SortBy("name")'>Sort by Name</button>
+    <button class="btn btn-light" @onclick='() => SortBy("gpa")'>Sort by GPA</button>
+    <button class="btn btn-light" @onclick='() => SortBy("id")'>Sort by ID</button>
+</div>
+
 <table class="table">
     <thead>
         <tr>
@@ -19,7 +37,8 @@
             <th>Date of birth</th>
             <th>Gender</th>
             <th>GPA</th>
-            <th></th>
+            <th>Program</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -33,7 +52,16 @@
                 <td>@student.DateOfBirth</td>
                 <td>@student.Gender</td>
                 <td>@student.GPA</td>
+                <td>@student.ProgramEnrolled</td>
                 <td>
+                    <button class="btn btn-sm btn-warning" 
+                            @onclick="() => EditStudent(student.Id)">
+                            Edit
+                    </button>
+                    <button class="btn btn-sm btn-danger ms-1" 
+                            @onclick="() => AskDelete(student)">
+                            Delete
+                    </button>
                     <button class="btn btn-sm btn-secondary" 
                             @onclick="() => SelectStudent(student)">
                         Select
@@ -43,6 +71,23 @@
         }
     </tbody>
 </table>
+
+@if (deleteTarget != null)
+{
+    <div class="modal show d-block" tabindex="-1" style="background-color: rgba(0,0,0,.5);">
+        <div class="modal-dialog">
+            <div class="modal-content p-3">
+                <h5>Delete Student</h5>
+                <p>Are you sure you want to delete @deleteTarget.GetFullName()?</p>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <button class="btn btn-danger" @onclick="ConfirmDelete">Delete</button>
+                    <button class="btn btn-secondary" @onclick="CancelDelete">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @if (TheSelectedStudent != null)
 {
@@ -54,18 +99,31 @@
     <p><strong>Date of Birth:</strong> @TheSelectedStudent.DateOfBirth</p>
     <p><strong>Gender:</strong> @TheSelectedStudent.Gender</p>
     <p><strong>GPA:</strong> @TheSelectedStudent.GPA</p>
+    <p><strong>Program Enrolled:</strong> @TheSelectedStudent.ProgramEnrolled</p>
 }
 
 @code {
     private int currentCount = 0;
     private List<Student> studentLists = new();
     public Student? TheSelectedStudent = null;
+    private string searchQuery = "";
+    private decimal minGpaFilter = 0;
+
+    private Student? deleteTarget = null;
+
+    private string currentSortColumn = "";
+    private bool sortAscending = true;
 
     private void IncrementCount() => currentCount++;
 
     protected override void OnInitialized()
     {
-        studentLists = StudentService.GetAllStudents();
+        LoadAllStudents();
+    }
+
+    private void LoadAllStudents()
+    {
+        studentLists = StudentService.GetAllStudents().ToList();
     }
 
     private void SelectStudent(Student student)
@@ -73,7 +131,78 @@
         TheSelectedStudent = student;
     }
 
-    private void Edit(int id) => NavigationManager.NavigateTo($"/students/edit/{id}");
-    private void Delete(int id) => NavigationManager.NavigateTo($"/students/delete/{id}");
-    private void NavToEnroll() => NavigationManager.NavigateTo("/students/enroll");
+    private void EditStudent(int id)
+    {
+        NavigationManager.NavigateTo($"/StudentEdit/{id}");
+    }
+
+    private void DeleteStudent(int id)
+    {
+        StudentService.DeleteStudent(id);
+        LoadAllStudents();
+    }
+    private void AskDelete(Student student)
+    {
+        deleteTarget = student;
+    }
+
+    private void ConfirmDelete()
+    {
+        if (deleteTarget != null)
+        {
+            StudentService.DeleteStudent(deleteTarget.Id);
+            LoadAllStudents();
+            deleteTarget = null;
+        }
+    }
+
+    private void CancelDelete()
+    {
+        deleteTarget = null;
+    }    
+
+    private void SearchStudents()
+    {
+        if (string.IsNullOrWhiteSpace(searchQuery))
+            LoadAllStudents();
+        else
+            studentLists = StudentService.SearchStudentsByName(searchQuery);
+    }
+
+    private void FilterByGpa()
+    {
+        studentLists = StudentService.GetStudentsAboveGPA(minGpaFilter);
+    }
+
+    private void SortBy(string column)
+    {
+        if (currentSortColumn == column)
+        {
+            // Toggle direction if same column pressed again
+            sortAscending = !sortAscending;
+        }
+        else
+        {
+            // New column, reset to ascending
+            currentSortColumn = column;
+            sortAscending = true;
+        }
+
+        studentLists = column switch
+        {
+            "name" => sortAscending
+                ? studentLists.OrderBy(s => s.FirstName).ToList()
+                : studentLists.OrderByDescending(s => s.FirstName).ToList(),
+
+            "gpa" => sortAscending
+                ? studentLists.OrderBy(s => s.GPA).ToList()
+                : studentLists.OrderByDescending(s => s.GPA).ToList(),
+
+            "id" => sortAscending
+                ? studentLists.OrderBy(s => s.Id).ToList()
+                : studentLists.OrderByDescending(s => s.Id).ToList(),
+
+            _ => studentLists
+        };
+    }
 }

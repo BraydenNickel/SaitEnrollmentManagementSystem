@@ -1,10 +1,14 @@
 using BlazorApp1.Components;
+using BlazorApp1.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddSingleton<StudentService>();
+builder.Services.AddSingleton<ProgramService>();
 
 var app = builder.Build();
 

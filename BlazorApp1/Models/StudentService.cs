@@ -73,5 +73,27 @@ namespace BlazorApp1.Models
                 students.Remove(student);
             }
         }
+
+        public List<Student> SearchStudentsByName(string name)
+        {
+            return students.Where(s => s.GetFullName().Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        public List<Student> GetStudentsAboveGPA(decimal minGpa)
+        {
+            Func<Student, bool> gpaFilter = s => s.GPA >= minGpa;
+            return students.Where(gpaFilter).ToList();
+        }
+
+        public IEnumerable<Student> FilterStudents(Func<Student, bool> filter)
+        {
+            foreach (var student in students)
+            {
+                if (filter(student))
+                {
+                    yield return student;
+                }
+            }
+        }
     };
 }   

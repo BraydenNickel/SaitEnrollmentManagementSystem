@@ -1,5 +1,3 @@
-using System;
-
 public class Student
 {
     public int Id { get; set; }
@@ -11,6 +9,8 @@ public class Student
     public int CurrentSemester { get; set; }
     public int NumberOfCourses { get; set; }
     public string ProgramEnrolled { get; set; }
+
+    public Student() { }
 
     public Student(int id, string firstName, string lastName, DateTime dateOfBirth, string gender, decimal gpa, int currentSemester, int numberOfCourses, string programEnrolled)
     {

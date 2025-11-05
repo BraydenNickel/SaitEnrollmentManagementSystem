@@ -39,7 +39,7 @@ class StudentService:
         student.gender = gender
         student.gpa = gpa
         student.current_semester = current_semester
-        student.number_of_course = number_of_courses
+        student.number_of_courses = number_of_courses
         student.program_enrolled = program_enrolled
         student.validate()
 

@@ -1,7 +1,7 @@
 # SaitEnrollmentManagementSystem
 This repository contains:
 - C# Blazor Web App (BlazorApp1 folder)
-- Python Console Version (PythonVersion folder)
+- Python Console Version (PythonEnrollmentSystem folder)
 
 Both versions implement:
 - CRUD operations

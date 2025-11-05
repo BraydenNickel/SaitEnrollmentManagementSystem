@@ -31,6 +31,10 @@ class StudentService:
     
     def GetAllStudents(self):
         return self.students
+    
+    def AddStudent(self, fn, ln, dob,gender,gpa, semensterNumber, courseNumber, program):
+        generated_ID = max(item.Id for item in self.students) + 1
+        self.students.append(students(generated_ID, fn, ln, dob,gender,gpa, semensterNumber, courseNumber, program))
 
 class App(tk.Tk):
     def __init__(self):
@@ -97,6 +101,9 @@ class MainPage(tk.Frame):
         self.ProgramEnrolled = tk.Entry(self, width=40)
         self.ProgramEnrolled.pack()
 
+        tk.Button(self, text="Add student",
+                  command=lambda: self.addStudent()).pack(pady=10)
+
         self.refresh()
 
     def on_select(self, event):
@@ -121,6 +128,18 @@ class MainPage(tk.Frame):
         replace_text(self.CurrentSemester, self.selectedStudent.CurrentSemester)
         replace_text(self.NumberOfCourses, self.selectedStudent.NumberOfCourses)
         replace_text(self.ProgramEnrolled, self.selectedStudent.ProgramEnrolled)
+
+    def addStudent(self):
+        #self.Id, self.FirstName, self.LastName, self.DateOfBirth, self.Gender, self.GPA, self.CurrentSemester, self.NumberOfCourses, self.ProgramEnrolled
+        self.studentService.AddStudent(self.FirstName.get(), self.LastName.get(), self.DateOfBirth.get(), self.Gender.get(), self.GPA.get(), self.CurrentSemester.get(), self.NumberOfCourses.get(), self.ProgramEnrolled.get())
+
+        self.refresh()
+    def editStudent(self):
+        pass
+
+    def deleteStudent(self):
+        pass
+
 
     def toggle(self):
         global you

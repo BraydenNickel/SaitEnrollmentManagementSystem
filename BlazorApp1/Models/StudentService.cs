@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.ComponentModel.DataAnnotations;
 
 namespace BlazorApp1.Models
 {
@@ -34,6 +35,11 @@ namespace BlazorApp1.Models
         {
             int newId = GenerateId();
             Student newStudent = new Student(newId, firstName, lastName, dateOfBirth, gender, gpa, currentSemester, numberOfCourses, programEnrolled);
+
+            // Trigger validation
+            var validationContext = new ValidationContext(newStudent);
+            Validator.ValidateObject(newStudent, validationContext, validateAllProperties: true);
+
             students.Add(newStudent);
         }
 
@@ -62,6 +68,10 @@ namespace BlazorApp1.Models
                 student.CurrentSemester = currentSemester;
                 student.NumberOfCourses = numberOfCourses;
                 student.ProgramEnrolled = programEnrolled;
+
+                // Trigger validation
+                var validationContext = new ValidationContext(student);
+                Validator.ValidateObject(student, validationContext, validateAllProperties: true);
             }
         }
 
